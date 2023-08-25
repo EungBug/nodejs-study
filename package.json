@@ -1,0 +1,25 @@
+{
+  "name": "nodejs-study",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "git@github.com:EungBug/nodejs-study.git",
+  "author": "EungBug <eungb14@gmail.com>",
+  "license": "MIT",
+  "scripts": {
+    "dev": "babel-node src/index.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.22.10",
+    "@babel/core": "^7.22.11",
+    "@babel/node": "^7.22.10",
+    "@babel/preset-env": "^7.22.10"
+  },
+  "babel": {
+    "presets": [
+      "@babel/preset-env"
+    ]
+  }
+}
