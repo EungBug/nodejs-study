@@ -4,14 +4,7 @@ import helmet from 'helmet';
 import dayjs from 'dayjs';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
-
-let users = [
-  {
-    id: 1,
-    name: 'Eun bi',
-    age: 18
-  }
-];
+import UserController from './users';
 
 // express 앱 생성
 const app = express();
@@ -22,6 +15,10 @@ app.use(helmet());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true, limit: '700mb' }));
 
+// 유저 라우터 등록
+app.use('/users', UserController.router);
+
+/*
 // GET - 유저 조회
 // query or path
 // 성공 status : 200
@@ -67,6 +64,7 @@ app.delete('/users/:id', (req, res) => {
   users = deletedUsers;
   res.status(204).json({});
 });
+*/
 
 // express 앱 실행하기
 app.listen(8000, () => {
