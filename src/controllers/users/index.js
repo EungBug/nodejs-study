@@ -28,11 +28,19 @@ class UserController {
   }
 
   // 유저 정보 상세 조회
-  getUser(req, res) {
-    const { id } = req.params;
-    const user = this.users.find(user => user.id === Number(id));
+  getUser(req, res, next) {
+    try {
+      const { id } = req.params;
+      const user = this.users.find(user => user.id === Number(id));
 
-    res.status(200).json({ user });
+      if (!user) {
+        throw { status: 404, message: '유저를 찾을 수 없습니다.' };
+      }
+
+      res.status(200).json({ user });
+    } catch (error) {
+      next(error);
+    }
   }
 
   // 유저 생성
