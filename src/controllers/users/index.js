@@ -2,7 +2,7 @@ import { Router } from 'express';
 // 라우터 생성
 class UserController {
   router;
-
+  path = '/users';
   users = [
     {
       id: 1,

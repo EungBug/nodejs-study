@@ -4,7 +4,7 @@ import helmet from 'helmet';
 import dayjs from 'dayjs';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
-import UserController from './users';
+import Controllers from './controllers';
 
 // express 앱 생성
 const app = express();
@@ -16,7 +16,9 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true, limit: '700mb' }));
 
 // 유저 라우터 등록
-app.use('/users', UserController.router);
+Controllers.forEach(controller => {
+  app.use(controller.path, controller.router);
+});
 
 /*
 // GET - 유저 조회
