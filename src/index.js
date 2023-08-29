@@ -5,6 +5,8 @@ import dayjs from 'dayjs';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import Controllers from './controllers';
+import { swaggerDocs, options } from './swagger';
+import swaggerUiExpress from 'swagger-ui-express';
 
 // express 앱 생성
 const app = express();
@@ -24,6 +26,11 @@ Controllers.forEach(controller => {
 app.use((err, req, res, next) => {
   res.status(err.status || 500).json({ message: err.message || '서버에서 에러가 발생했습니다.' });
 });
+
+app.get('/swagger.json', (req, res) => {
+  res.status(200).json(swaggerDocs);
+});
+app.use('/api-docs', swaggerUiExpress.serve, swaggerUiExpress.setup(undefined, options));
 
 /*
 // GET - 유저 조회
