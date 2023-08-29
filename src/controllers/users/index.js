@@ -23,8 +23,12 @@ class UserController {
   }
 
   // 전체 유저 조회
-  getUsers(req, res) {
-    res.status(200).json({ users: this.users });
+  getUsers(req, res, next) {
+    try {
+      res.status(200).json({ users: this.users });
+    } catch (error) {
+      next(error);
+    }
   }
 
   // 유저 정보 상세 조회
@@ -44,15 +48,19 @@ class UserController {
   }
 
   // 유저 생성
-  createUser(req, res) {
-    const { name, age } = req.body;
-    this.users.push({
-      id: new Date().getTime(),
-      name,
-      age
-    });
+  createUser(req, res, next) {
+    try {
+      const { name, age } = req.body;
+      this.users.push({
+        id: new Date().getTime(),
+        name,
+        age
+      });
 
-    res.status(201).json({ users: this.users });
+      res.status(201).json({ users: this.users });
+    } catch (error) {
+      next(error);
+    }
   }
 }
 

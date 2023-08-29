@@ -20,6 +20,11 @@ Controllers.forEach(controller => {
   app.use(controller.path, controller.router);
 });
 
+// 에러 미들웨어 - 공통 에러 핸들링
+app.use((err, req, res, next) => {
+  res.status(err.status || 500).json({ message: err.message || '서버에서 에러가 발생했습니다.' });
+});
+
 /*
 // GET - 유저 조회
 // query or path
