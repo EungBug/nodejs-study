@@ -26,7 +26,10 @@ export const getUserSwagger = {
                       id: {
                         type: 'number'
                       },
-                      name: {
+                      firstName: {
+                        type: 'string'
+                      },
+                      lastName: {
                         type: 'string'
                       },
                       age: {
@@ -64,7 +67,10 @@ export const getUsersSwagger = {
                         id: {
                           type: 'number'
                         },
-                        name: {
+                        firstName: {
+                          type: 'string'
+                        },
+                        lastName: {
                           type: 'string'
                         },
                         age: {

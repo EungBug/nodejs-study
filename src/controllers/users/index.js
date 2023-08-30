@@ -1,4 +1,6 @@
 import { Router } from 'express';
+import { UserDTO, CreateUserDTO } from './dto';
+
 // 라우터 생성
 class UserController {
   router;
@@ -6,7 +8,8 @@ class UserController {
   users = [
     {
       id: 1,
-      name: 'Eun bi',
+      firstName: 'Lee',
+      lastName: 'Eun bi',
       age: 18
     }
   ];
@@ -18,6 +21,7 @@ class UserController {
 
   init() {
     this.router.get('/', this.getUsers.bind(this));
+    this.router.get('/detail/:id/fullName', this.getUserFullName.bind(this));
     this.router.get('/detail/:id', this.getUser.bind(this));
     this.router.post('/', this.createUser.bind(this));
   }
@@ -25,7 +29,8 @@ class UserController {
   // 전체 유저 조회
   getUsers(req, res, next) {
     try {
-      res.status(200).json({ users: this.users });
+      const users = this.users.map(user => new UserDTO(user));
+      res.status(200).json({ users });
     } catch (error) {
       next(error);
     }
@@ -35,13 +40,32 @@ class UserController {
   getUser(req, res, next) {
     try {
       const { id } = req.params;
-      const user = this.users.find(user => user.id === Number(id));
+      const targetUser = this.users.find(user => user.id === Number(id));
 
-      if (!user) {
+      if (!targetUser) {
+        throw { status: 404, message: '유저를 찾을 수 없습니다.' };
+      }
+      const user = new UserDTO(targetUser);
+
+      res.status(200).json({ user });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  // DTO를 사용하는 경우 DTO에 정의한 함수를 사용할 수 있다.
+  getUserFullName(req, res, next) {
+    try {
+      const { id } = req.params;
+      const targetUser = this.users.find(user => user.id === Number(id));
+
+      if (!targetUser) {
         throw { status: 404, message: '유저를 찾을 수 없습니다.' };
       }
 
-      res.status(200).json({ user });
+      const user = new UserDTO(targetUser);
+
+      res.status(200).json({ fullName: user.fullName() });
     } catch (error) {
       next(error);
     }
@@ -50,12 +74,15 @@ class UserController {
   // 유저 생성
   createUser(req, res, next) {
     try {
-      const { name, age } = req.body;
-      this.users.push({
-        id: new Date().getTime(),
-        name,
-        age
-      });
+      const { firstName, lastName, age } = req.body;
+
+      if (!firstName || !lastName) {
+        throw { status: 400, message: '이름이 없습니다.' };
+      }
+
+      const newUser = new CreateUserDTO(firstName, lastName, age).getNewUser;
+
+      this.users.push(newUser);
 
       res.status(201).json({ users: this.users });
     } catch (error) {
