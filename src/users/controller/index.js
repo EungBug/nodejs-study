@@ -1,90 +1,87 @@
 import { Router } from 'express';
-import { CreateUserDTO, UserDTO } from '../dto';
+import { UserService } from '../service';
+import { pagination } from '../../middleware/paginations';
+import { CreateUserDTO, UpdateUserDTO, UserDTO } from '../dto';
 
 // 라우터 생성
 class UserController {
   router;
   path = '/users';
-  users = [
-    {
-      id: 1,
-      firstName: 'Lee',
-      lastName: 'Eun bi',
-      age: 18,
-    },
-  ];
+  userService;
 
   constructor() {
     this.router = Router();
+    this.userService = new UserService();
     this.init();
   }
 
   init() {
-    this.router.get('/', this.getUsers.bind(this));
-    this.router.get('/detail/:id/fullName', this.getUserFullName.bind(this));
+    this.router.get('/', pagination, this.getUsers.bind(this));
     this.router.get('/detail/:id', this.getUser.bind(this));
     this.router.post('/', this.createUser.bind(this));
+    this.router.post('/:id', this.updateUser.bind(this));
+    this.router.post('/:id', this.deleteUser.bind(this));
   }
 
   // 전체 유저 조회
-  getUsers(req, res, next) {
+  async getUsers(req, res, next) {
     try {
-      const users = this.users.map(user => new UserDTO(user));
-      res.status(200).json({ users });
+      const { users, count } = await this.userService.findUsers({
+        skip: req.skip,
+        take: req.take,
+      });
+
+      res.status(200).json({ users: users.map(user => new UserDTO(user)), count });
     } catch (error) {
       next(error);
     }
   }
 
   // 유저 정보 상세 조회
-  getUser(req, res, next) {
+  async getUser(req, res, next) {
     try {
       const { id } = req.params;
-      const targetUser = this.users.find(user => user.id === Number(id));
+      const user = await this.userService.findUserById(id);
 
-      if (!targetUser) {
-        throw { status: 404, message: '유저를 찾을 수 없습니다.' };
-      }
-      const user = new UserDTO(targetUser);
-
-      res.status(200).json({ user });
-    } catch (error) {
-      next(error);
-    }
-  }
-
-  // DTO를 사용하는 경우 DTO에 정의한 함수를 사용할 수 있다.
-  getUserFullName(req, res, next) {
-    try {
-      const { id } = req.params;
-      const targetUser = this.users.find(user => user.id === Number(id));
-
-      if (!targetUser) {
-        throw { status: 404, message: '유저를 찾을 수 없습니다.' };
-      }
-
-      const user = new UserDTO(targetUser);
-
-      res.status(200).json({ fullName: user.fullName() });
+      res.status(200).send({ user: new UserDTO(user) });
     } catch (error) {
       next(error);
     }
   }
 
   // 유저 생성
-  createUser(req, res, next) {
+  async createUser(req, res, next) {
     try {
-      const { firstName, lastName, age } = req.body;
+      const createUserDto = new CreateUserDTO(req.body);
+      const newUserId = await this.userService.createUser(createUserDto);
 
-      if (!firstName || !lastName) {
-        throw { status: 400, message: '이름이 없습니다.' };
-      }
+      res.status(201).json({ id: newUserId });
+    } catch (error) {
+      next(error);
+    }
+  }
 
-      const newUser = new CreateUserDTO(firstName, lastName, age).getNewUser;
+  // 유저 수정
+  async updateUser(req, res, next) {
+    try {
+      const { id } = req.params;
+      const updateUserDto = new UpdateUserDTO(req.body);
 
-      this.users.push(newUser);
+      await this.userService.updateUser(id, updateUserDto);
 
-      res.status(201).json({ users: this.users });
+      res.status(204).json({});
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  // 유저 삭제
+  async deleteUser(req, res, next) {
+    try {
+      const { id } = req.params;
+      await this.userService.deleteUser(id);
+
+      res.status(204).json({});
     } catch (error) {
       next(error);
     }

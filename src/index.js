@@ -4,13 +4,9 @@ import helmet from 'helmet';
 import Controllers from './controllers';
 import { swaggerDocs, options } from './swagger';
 import swaggerUiExpress from 'swagger-ui-express';
-import dotenv from 'dotenv';
 import database from './database';
 
 (async () => {
-  const config = dotenv.config();
-  config.parsed();
-
   // express 앱 생성
   const app = express();
 
