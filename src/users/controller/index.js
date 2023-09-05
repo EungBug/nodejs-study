@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { UserDTO, CreateUserDTO } from './dto';
+import { CreateUserDTO, UserDTO } from '../dto';
 
 // 라우터 생성
 class UserController {
@@ -10,8 +10,8 @@ class UserController {
       id: 1,
       firstName: 'Lee',
       lastName: 'Eun bi',
-      age: 18
-    }
+      age: 18,
+    },
   ];
 
   constructor() {

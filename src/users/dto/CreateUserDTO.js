@@ -14,7 +14,7 @@ export class CreateUserDTO {
       id: new Date().getTime(),
       firstName: this.firstName,
       lastName: this.lastName,
-      age: this.age
+      age: this.age,
     };
   }
 }

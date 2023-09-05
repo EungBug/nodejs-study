@@ -1,5 +1,9 @@
-import * as Swaggers from '../controllers/swagger';
+import * as UserSwagger from '../users/swagger';
 import defaultSwagger from './defaultSwager';
+
+const Swaggers = {
+  ...UserSwagger,
+};
 
 // path 가공
 const { paths } = Object.values(Swaggers).reduce(
@@ -13,12 +17,12 @@ const { paths } = Object.values(Swaggers).reduce(
       if (!acc.paths[key]) {
         acc.paths = {
           ...acc.paths,
-          ...api
+          ...api,
         };
       } else {
         acc.paths[key] = {
           ...acc.paths[key],
-          ...api[key]
+          ...api[key],
         };
       }
     });
@@ -31,12 +35,12 @@ const { paths } = Object.values(Swaggers).reduce(
 export const swaggerDocs = {
   ...defaultSwagger,
   // paths 등록
-  paths
+  paths,
 };
 
 // Swagger에 등록하기
 export const options = {
   swaggerOptions: {
-    url: '/swagger.json'
-  }
+    url: '/swagger.json',
+  },
 };
