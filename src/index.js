@@ -5,10 +5,24 @@ import Controllers from './controllers';
 import { swaggerDocs, options } from './swagger';
 import swaggerUiExpress from 'swagger-ui-express';
 import database from './database';
+import dotenv from 'dotenv';
+import bcrypt from 'bcrypt';
+dotenv.config();
 
+const password = '12345';
 (async () => {
   // express 앱 생성
   const app = express();
+
+  // bcrypt를 통한 비밀번호 암호화 및 비교하는 로직
+  const salt = Number(process.env.PASSWORD_SALT);
+  const hashedPassword = await bcrypt.hash(password, salt);
+
+  console.log({ hashedPassword });
+
+  const isCorrect = await bcrypt.compare('password', hashedPassword);
+
+  console.log({ isCorrect });
 
   // DB 연결
   await database.$connect();
