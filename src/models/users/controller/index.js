@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { UserService } from '../service';
-import { pagination } from '../../middleware/paginations';
+import { pagination } from '../../../middleware/paginations';
 import { CreateUserDTO, UpdateUserDTO, UserDTO } from '../dto';
 
 // 라우터 생성

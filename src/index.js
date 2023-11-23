@@ -1,7 +1,7 @@
 import express from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
-import Controllers from './controllers';
+import { Controllers } from './models';
 import { swaggerDocs, options } from './swagger';
 import swaggerUiExpress from 'swagger-ui-express';
 import database from './database';

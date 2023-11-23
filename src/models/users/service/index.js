@@ -1,4 +1,4 @@
-import database from '../../database';
+import database from '../../../database';
 
 export class UserService {
   async checkUserByEmail(email) {
@@ -10,7 +10,7 @@ export class UserService {
 
     if (!user) return false;
 
-    return true;
+    return user;
   }
 
   // findById, findMany, create, update, delete
