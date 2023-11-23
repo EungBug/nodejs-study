@@ -7,6 +7,7 @@ import swaggerUiExpress from 'swagger-ui-express';
 import database from './database';
 import dotenv from 'dotenv';
 import bcrypt from 'bcrypt';
+import { jwtAuth } from './middleware/jwtAuth';
 dotenv.config();
 
 const password = '12345';
@@ -32,6 +33,7 @@ const password = '12345';
   app.use(helmet());
   app.use(express.json());
   app.use(express.urlencoded({ extended: true, limit: '700mb' }));
+  app.use(jwtAuth);
 
   // 유저 라우터 등록
   Controllers.forEach(controller => {
